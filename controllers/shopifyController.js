@@ -44,6 +44,34 @@ exports.validateApiKey = (req, res) => {
       });
     });
 };
+exports.getAllKeys = async (req, res) => {
+  try {
+    // Extract the userId from the authenticated user's request
+    const userId = req.user.userId;
+
+    // Query the database to find only the `stringField` of all API keys associated with this user
+    const apiKeys = await Api.find({ user: userId }).select('stringField -_id'); // Select `stringField` only, exclude `_id`
+
+    // Check if any API keys were found
+    if (!apiKeys || apiKeys.length === 0) {
+      return res
+        .status(404)
+        .json({ message: 'No API keys found for this user.' });
+    }
+
+    // Send the API keys as a response
+    res.status(200).json({
+      success: true,
+      data: apiKeys,
+    });
+  } catch (error) {
+    console.error('Error fetching API keys:', error);
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while fetching API keys.',
+    });
+  }
+};
 
 // Sync Products
 exports.syncProducts = (req, res) => {

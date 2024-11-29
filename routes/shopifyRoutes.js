@@ -5,6 +5,7 @@ const apiKeyMiddleware = require('../middleware/apiKeyMiddleware');
 const authenticateUser = require('../middleware/authMiddlewere');
 
 router.post('/validate-api-key',authenticateUser, shopifyController.validateApiKey);
+router.post('/getAllKeys', authenticateUser, shopifyController.getAllKeys);
 router.get('/sync-products', apiKeyMiddleware, shopifyController.syncProducts);
 router.get('/sync-orders', apiKeyMiddleware, shopifyController.syncOrders);
 router.get(
